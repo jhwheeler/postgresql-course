@@ -10,7 +10,8 @@ SELECT
     conrelid = :'tbl'::regclass
     then 'outgoing'
     else 'incoming'
-  end as direction
+  end as direction,
+  conindid::regclass as index -- supporting index
 FROM
   pg_constraint
   WHERE
