@@ -19,8 +19,7 @@ FROM
     conrelid = :'tbl'::regclass -- gets the outgoing fkey relations
     OR confrelid = :'tbl'::regclass -- gets the incoming fkey relations
   )
-  -- filter to only show foreign key constraints
-  AND contype = 'f';
+  AND contype = 'f'; -- filter to only show foreign key constraints
   -- f = foreign key, c = check, n = not-null, p = primary key, u = unique, t = trigger, x = exclusion
 
 -- ----------------------------------------------------------------------
