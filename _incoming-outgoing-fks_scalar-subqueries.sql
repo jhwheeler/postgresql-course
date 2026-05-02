@@ -1,4 +1,6 @@
 -- List all incoming and outgoing FKs for a table
+-- NB: This was the first attempt, using scalar subqueries; it is not correct.
+-- Refer to ./incoming-outgoing-fks.sql for the correct answer
 SELECT
   conname,
   conrelid,
