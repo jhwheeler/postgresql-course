@@ -130,12 +130,12 @@ _Schema introspection_ — [Information Schema](https://www.postgresql.org/docs/
 
 1. List all tables in `public` with their estimated row counts (`pg_class.reltuples`). _Variation: order by table size on disk (`pg_total_relation_size`) descending._
 
-- Proposed answer: ./workbook/row_counts_all_tables.sql
+- Proposed answer: ./row_counts_all_tables.sql
 
 2. For `user_quizzes`, list all incoming and outgoing FKs by querying `pg_constraint`. _Variation: do the same for any table given via `\set tbl 'table_name'`._
 
-- Proposed answer: ./workbook/incoming-outgoing-fks.sql
-  (Initially, I did it with scalar subqueries -- ./workbook/incoming-outgoing-fks_scalar-subqueries.sql -- until I learned about `regclass`)
+- Proposed answer: ./incoming-outgoing-fks.sql
+  (Initially, I did it with scalar subqueries -- ./incoming-outgoing-fks_scalar-subqueries.sql -- until I learned about `regclass`)
 
 3. List all triggers on a given table along with the function each calls. _Variation: across the whole schema, only triggers whose function calls `net.http_post` (i.e., `pg_net` async fan-out)._
 
