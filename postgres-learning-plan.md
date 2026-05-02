@@ -135,7 +135,7 @@ _Schema introspection_ — [Information Schema](https://www.postgresql.org/docs/
 2. For `user_quizzes`, list all incoming and outgoing FKs by querying `pg_constraint`. _Variation: do the same for any table given via `\set tbl 'table_name'`._
 
 - Proposed answer: ./incoming-outgoing-fks.sql
-  (Initially, I did it with scalar subqueries -- ./incoming-outgoing-fks_scalar-subqueries.sql -- until I learned about `regclass`)
+  (Initially, I did it with scalar subqueries -- ./\_incoming-outgoing-fks_scalar-subqueries.sql -- until I learned about `regclass`)
 
 3. List all triggers on a given table along with the function each calls. _Variation: across the whole schema, only triggers whose function calls `net.http_post` (i.e., `pg_net` async fan-out)._
 
