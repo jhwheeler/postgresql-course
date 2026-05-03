@@ -139,7 +139,7 @@ _Schema introspection_ — [Information Schema](https://www.postgresql.org/docs/
 
 3. List all triggers on a given table along with the function each calls. _Variation: across the whole schema, only triggers whose function calls `net.http_post` (i.e., `pg_net` async fan-out)._
 
-- Proposed answer: ./triggers-with-functions.sql
+- Proposed answer: ./triggers-with-functions.sql. Variation for `net.http_post`: ./net-http-posttriggers-with-functions.sql.
 
 _Joins, anti-joins, aggregations_ — [PG §7.2 Table Expressions](https://www.postgresql.org/docs/current/queries-table-expressions.html),
 [PG §9.21 Aggregate Functions](https://www.postgresql.org/docs/current/functions-aggregate.html),
