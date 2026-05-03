@@ -1,0 +1,15 @@
+-- List all triggers on a given table along with the function each calls
+
+select
+  tg.tgrelid as "Table ID",
+  tg.tgrelid::regclass as "Table",
+  tg.oid as "Trigger ID",
+  pr.proname as "Trigger Name",
+  pg_get_triggerdef(tg.oid) as "Trigger Definition", -- defintion of the trigger itself
+  tg.tgfoid as "Triggered Function ID",
+  pg_get_functiondef(tg.tgfoid) as "Triggered Function Definition" -- definition of the function that the trigger calls
+from
+  pg_trigger tg
+join pg_proc pr on tg.tgfoid = pr.oid
+where
+  tgrelid = :'tbl'::regclass;
