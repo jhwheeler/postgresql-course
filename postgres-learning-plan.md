@@ -140,6 +140,12 @@ _Schema introspection_ — [Information Schema](https://www.postgresql.org/docs/
 3. List all triggers on a given table along with the function each calls. _Variation: across the whole schema, only triggers whose function calls `net.http_post` (i.e., `pg_net` async fan-out)._
 
 - Proposed answer: ./triggers-with-functions.sql. Variation for `net.http_post`: ./net-http-posttriggers-with-functions.sql.
+- Reinforcement drills against the same `pg_trigger` / `pg_proc` catalogs:
+  - a) Decode `tgtype` into `(timing, events[])`. Bitmask: `1`=ROW, `2`=BEFORE, `4`=INSERT, `8`=DELETE, `16`=UPDATE, `32`=TRUNCATE, `64`=INSTEAD OF. Cross-check decoded output against `pg_get_triggerdef(oid)` for the same row.
+  - b) Inversion — per function, list every table it's attached to via `array_agg(tgrelid::regclass)`; filter to functions called by ≥ 2 triggers. Surfaces the blast radius of shared utilities like `set_updated_at`.
+  - c) Anti-join — tables in `public` with no `updated_at` trigger. Write it both as `LEFT JOIN ... WHERE tg.oid IS NULL` and as `NOT EXISTS (...)`; verify the same row set.
+  - d) Disabled triggers across the schema (`tgenabled <> 'O'`; values are `O`=enabled/origin, `D`=disabled, `R`=replica-only, `A`=always). Catches "turned off for a migration, never turned back on."
+  - e) `SECURITY DEFINER` trigger functions with their pinned `search_path` — join `pg_trigger` → `pg_proc` → `pg_namespace`, filter `prosecdef = true`, surface `proconfig`. Bridges to Week 5; rows where `proconfig` lacks a `search_path=` entry are the hijacking footgun.
 
 _Joins, anti-joins, aggregations_ — [PG §7.2 Table Expressions](https://www.postgresql.org/docs/current/queries-table-expressions.html),
 [PG §9.21 Aggregate Functions](https://www.postgresql.org/docs/current/functions-aggregate.html),
