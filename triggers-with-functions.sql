@@ -4,9 +4,10 @@ select
   tg.tgrelid as "Table ID",
   tg.tgrelid::regclass as "Table",
   tg.oid as "Trigger ID",
-  pr.proname as "Trigger Name",
+  tg.tgname as "Trigger Name",
   pg_get_triggerdef(tg.oid) as "Trigger Definition", -- defintion of the trigger itself
   tg.tgfoid as "Triggered Function ID",
+  pr.proname as "Function Name",
   pg_get_functiondef(tg.tgfoid) as "Triggered Function Definition" -- definition of the function that the trigger calls
 from
   pg_trigger tg
