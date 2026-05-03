@@ -14,4 +14,5 @@ from
 join pg_proc pr on tg.tgfoid = pr.oid
 where
   tgrelid = :'tbl'::regclass
+  -- and pr.prosrc like '%http_post%' -- uncomment this to filter out trigger fns that don't call net.http_post
   and not tg.tgisinternal;
