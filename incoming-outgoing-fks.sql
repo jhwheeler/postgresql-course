@@ -1,27 +1,25 @@
 -- List all incoming and outgoing FKs for a table
-
-SELECT
+select
   conname, -- name of the constraint
   conrelid::regclass as source_table, -- name of the source table
   confrelid::regclass as ref_table, -- name of the referenced table
   pg_get_constraintdef(oid) as fk_definition, -- definition of the foreign key relation
   -- whether it's incoming or outgoing foreign key relation (relative to the table)
-  case when
-    conrelid = :'tbl'::regclass
-    then 'outgoing'
-    else 'incoming'
+  case when conrelid = :'tbl'::regclass then
+    'outgoing'
+  else
+    'incoming'
   end as direction,
   conindid::regclass as index -- supporting index
-FROM
+from
   pg_constraint
-  WHERE
-  (
-    conrelid = :'tbl'::regclass -- gets the outgoing fkey relations
-    OR confrelid = :'tbl'::regclass -- gets the incoming fkey relations
-  )
-  AND contype = 'f'; -- filter to only show foreign key constraints
-  -- f = foreign key, c = check, n = not-null, p = primary key, u = unique, t = trigger, x = exclusion
+where (conrelid = :'tbl'::regclass -- gets the outgoing fkey relations
+  or confrelid = :'tbl'::regclass -- gets the incoming fkey relations
+)
+and contype = 'f';
 
+-- filter to only show foreign key constraints
+-- f = foreign key, c = check, n = not-null, p = primary key, u = unique, t = trigger, x = exclusion
 -- ----------------------------------------------------------------------
 -- Feedback (from Claude)
 -- ----------------------------------------------------------------------
