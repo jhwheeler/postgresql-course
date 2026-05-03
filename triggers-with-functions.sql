@@ -1,16 +1,17 @@
--- List all triggers on a given table along with the function each calls
+-- List all user-defined triggers on a given table along with the function each calls
 
 select
   tg.tgrelid as "Table ID",
   tg.tgrelid::regclass as "Table",
   tg.oid as "Trigger ID",
   tg.tgname as "Trigger Name",
-  pg_get_triggerdef(tg.oid) as "Trigger Definition", -- defintion of the trigger itself
+  pg_get_triggerdef(tg.oid) as "Trigger Definition", -- definition of the trigger itself
   tg.tgfoid as "Triggered Function ID",
-  pr.proname as "Function Name",
-  pg_get_functiondef(tg.tgfoid) as "Triggered Function Definition" -- definition of the function that the trigger calls
+  pr.proname as "Function Name"
+  -- pg_get_functiondef(tg.tgfoid) as "Triggered Function Definition" -- uncomment this to get the full definition of the function that the trigger calls
 from
   pg_trigger tg
 join pg_proc pr on tg.tgfoid = pr.oid
 where
-  tgrelid = :'tbl'::regclass;
+  tgrelid = :'tbl'::regclass
+  and not tg.tgisinternal;
