@@ -4,7 +4,7 @@ A focused, mostly-free curriculum for getting fluent in the parts of Postgres
 that show up in real backend work. Ordered by leverage, not difficulty.
 
 > **Adapt the examples.** Exercises are written against an imaginary
-> learning-platform schema (users, courses, quizzes, `user_quizzes`, etc.)
+> learning-platform schema (users, courses, quizzes, etc.)
 > so the prompts stay concrete. Substitute table and column names from
 > your own database as you go — the patterns transfer.
 
@@ -421,13 +421,13 @@ Use The Index, Luke! click for you.
 
 | Module | Focus                                               | Hands-on deliverable                                                                                                                           |
 | ------ | --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1    | SQL fundamentals, types, constraints, schema design | Recreate a real table from memory; `pg_dump --schema-only` + `diff` against the real one is empty                                              |
-| 2    | psql + SQL fluency for ad-hoc data work             | 18-query workbook (schema introspection, joins, top-N, JSONB, dates, investigation); write any in <2 min                                       |
-| 3    | Indexes, EXPLAIN ANALYZE, query planning            | Tabulate plans for a representative set of app queries; ship one measured index/rewrite fix; one `WITH RECURSIVE` graph traversal              |
-| 4    | MVCC, transactions, locking, advisory locks         | Two-`psql`-session demo of row locks + MVCC `ctid` churn; reproduce the prereq cycle race with/without `pg_advisory_xact_lock`                 |
-| 5    | RLS, triggers, PL/pgSQL, `SECURITY DEFINER`, pg_net | `auth.uid()` rewrap with `EXPLAIN ANALYZE` delta; reimplement one trigger end-to-end; audit one `SECURITY DEFINER` fn and one `pg_net` trigger |
-| 6    | Safe migrations + production observability          | Lock-annotate one recent migration and rewrite anything unsafe; tag top-10 prod queries from `pg_stat_statements` by issue type                |
-| 7    | Vector + full-text search (hybrid retrieval)        | Build a 10k-row `posts` table with tsvector + `vector(384)` + HNSW; ship FTS, vector KNN, and RRF-hybrid queries; verify both indexes are hit  |
+| 1      | SQL fundamentals, types, constraints, schema design | Recreate a real table from memory; `pg_dump --schema-only` + `diff` against the real one is empty                                              |
+| 2      | psql + SQL fluency for ad-hoc data work             | 18-query workbook (schema introspection, joins, top-N, JSONB, dates, investigation); write any in <2 min                                       |
+| 3      | Indexes, EXPLAIN ANALYZE, query planning            | Tabulate plans for a representative set of app queries; ship one measured index/rewrite fix; one `WITH RECURSIVE` graph traversal              |
+| 4      | MVCC, transactions, locking, advisory locks         | Two-`psql`-session demo of row locks + MVCC `ctid` churn; reproduce the prereq cycle race with/without `pg_advisory_xact_lock`                 |
+| 5      | RLS, triggers, PL/pgSQL, `SECURITY DEFINER`, pg_net | `auth.uid()` rewrap with `EXPLAIN ANALYZE` delta; reimplement one trigger end-to-end; audit one `SECURITY DEFINER` fn and one `pg_net` trigger |
+| 6      | Safe migrations + production observability          | Lock-annotate one recent migration and rewrite anything unsafe; tag top-10 prod queries from `pg_stat_statements` by issue type                |
+| 7      | Vector + full-text search (hybrid retrieval)        | Build a 10k-row `posts` table with tsvector + `vector(384)` + HNSW; ship FTS, vector KNN, and RRF-hybrid queries; verify both indexes are hit  |
 
 Modules 3–7 each carry a drill that keeps Module 2's idiom muscle warm
 while reinforcing that module's topic. Drills run 3–5 queries depending on
