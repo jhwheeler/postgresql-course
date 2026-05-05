@@ -1,6 +1,6 @@
 # A practical PostgreSQL curriculum for backend engineers
 
-A focused, mostly-free curriculum for getting fluent in the parts of Postgres
+A focused curriculum for getting fluent in the parts of Postgres
 that show up in real backend work. Ordered by leverage, not difficulty.
 
 > **Adapt the examples.** Workbook exercises are written against an imaginary
