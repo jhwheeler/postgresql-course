@@ -3,7 +3,7 @@
 A focused, mostly-free curriculum for getting fluent in the parts of Postgres
 that show up in real backend work. Ordered by leverage, not difficulty.
 
-> **Adapt the examples.** Exercises are written against an imaginary
+> **Adapt the examples.** Workbook exercises are written against an imaginary
 > learning-platform schema (users, courses, quizzes, etc.)
 > so the prompts stay concrete. Substitute table and column names from
 > your own database as you go — the patterns transfer.
