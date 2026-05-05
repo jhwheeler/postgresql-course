@@ -131,7 +131,7 @@ _Joins, anti-joins, aggregations_ — [PG §7.2 Table Expressions](https://www.p
 [Modern SQL](https://modern-sql.com/) (Markus Winand — same author as
 Use The Index, Luke!; covers `FILTER`, `LATERAL`, anti-join patterns):
 
-4. **`quiz_starters_no_submission_7d.sql`** — Find users who started a quiz in the last 7 days but never submitted. Use `NOT EXISTS`. _Variation: rewrite as `LEFT JOIN ... WHERE submitted_at IS NULL` and verify the same row set._
+4. **`exam_starters_no_answers_7d.sql`** — Find users who started an exam in the last 7 days but never answered a question. Use `NOT EXISTS`. _Variation: rewrite as `LEFT JOIN ... WHERE ... IS NULL` and verify the same row set._
 5. **`course_enrollment_counts.sql`** — For each course, count enrolled users; include courses with zero enrollments. Use `LEFT JOIN ... GROUP BY`. _Variation: only courses where the count is below the average across all courses (subquery in `HAVING`)._
 6. **`quizzes_without_questions.sql`** — Find quizzes with no questions linked. _Variation: quizzes with fewer than N questions, where N is a `\set` parameter._
 
@@ -140,9 +140,9 @@ _Top-N-per-group + window functions_ — [PG §3.5 Window Functions tutorial](ht
 intro), [PG §4.2.8 Window Function Calls](https://www.postgresql.org/docs/current/sql-expressions.html#SYNTAX-WINDOW-FUNCTIONS)
 for syntax reference:
 
-7. **`most_recent_quiz_attempt_per_user.sql`** — For each user, find their most recent quiz attempt. Use `row_number() OVER (PARTITION BY user_id ORDER BY started_at DESC)`. _Variation: their 3 most recent._
-8. **`top_quizzes_per_course.sql`** — For each course, top 3 most-attempted quizzes. _Variation: top 3 by completion rate (a ratio, not a raw count) — and only courses with ≥ 50 attempts total._
-9. **`quiz_starts_running_total.sql`** — Running total of quizzes started per day, last 30 days. Use `SUM(...) OVER (ORDER BY day)`. _Variation: 7-day moving average via `ROWS BETWEEN 6 PRECEDING AND CURRENT ROW`._
+7. **`most_recent_exam_attempt_per_user.sql`** — For each user, find their most recent exam attempt. Use `row_number() OVER (PARTITION BY user_id ORDER BY created_at DESC)`. _Variation: their 3 most recent._
+8. **`top_exams_per_course.sql`** — For each course, top 3 most-attempted exams. _Variation: top 3 by completion rate (a ratio, not a raw count) — and only courses with ≥ 50 attempts total._
+9. **`exam_starts_running_total.sql`** — Running total of exams started per day, last 30 days. Use `SUM(...) OVER (ORDER BY day)`. _Variation: 7-day moving average via `ROWS BETWEEN 6 PRECEDING AND CURRENT ROW`._
 
 _JSONB, arrays, enums_ — [PG §9.16 JSON Functions and Operators](https://www.postgresql.org/docs/current/functions-json.html),
 [PG §9.19 Array Functions and Operators](https://www.postgresql.org/docs/current/functions-array.html),
@@ -156,15 +156,15 @@ _Date / time_ — [PG §9.9 Date/Time Functions](https://www.postgresql.org/docs
 [PG §8.5 Date/Time Types](https://www.postgresql.org/docs/current/datatype-datetime.html)
 (especially the timezone-handling section):
 
-13. **`quizzes_started_today_tz.sql`** — Quizzes started today in `America/Denver` (use `AT TIME ZONE`). _Variation: this calendar week (Mon–Sun) in the user's stored timezone._
-14. **`quiz_starts_hourly_buckets.sql`** — Quiz starts bucketed by hour, last 24 hours, including hours with zero starts (`generate_series` LEFT JOIN). _Variation: by day, last 30 days; or by 5-minute buckets, last hour._
-15. **`quiz_duration_percentiles.sql`** — Time between quiz `started_at` and `submitted_at`: p50, p95, p99 using `percentile_cont`. _Variation: per course; or only for users in a given cohort._
+13. **`exams_started_today_tz.sql`** — Exams started today in `America/Denver` (use `AT TIME ZONE`). _Variation: this calendar week (Mon–Sun) in the user's stored timezone._
+14. **`exam_starts_hourly_buckets.sql`** — Exam starts bucketed by hour, last 24 hours, including hours with zero starts (`generate_series` LEFT JOIN). _Variation: by day, last 30 days; or by 5-minute buckets, last hour._
+15. **`exam_duration_percentiles.sql`** — Duration of completed exams: p50, p95, p99 using `percentile_cont`. _Variation: per course; or only for users in a given cohort._
 
 _Investigation realism_ — composition over the prior idioms; new ref:
 [PG §7.8 WITH Queries (CTEs)](https://www.postgresql.org/docs/current/queries-with.html):
 
-16. **`user_activity_jsonb_blob.sql`** — Given a user*id (via `\set uid '...'`), build one query returning: their recent activity, their enrollments, their quiz attempts, their grades — as a single JSONB blob. Use CTEs + `jsonb_build_object`. \_Variation: same shape but for a list of user_ids, returning one row per user.*
-17. **`orphan_quiz_completions.sql`** — Find users in a "shouldn't-exist" state — completed quizzes recorded but no enrollment row for the parent course. _Variation: users with conflicting timestamps across two tables (e.g., enrollment dated after their first completed quiz)._
+16. **`user_activity_jsonb_blob.sql`** — Given a user*id (via `\set uid '...'`), build one query returning: their recent activity, their enrollments, their exam attempts, their grades — as a single JSONB blob. Use CTEs + `jsonb_build_object`. \_Variation: same shape but for a list of user_ids, returning one row per user.*
+17. **`orphan_exam_completions.sql`** — Find users in a "shouldn't-exist" state — completed exams recorded but no enrollment row for the parent course. _Variation: users with conflicting timestamps across two tables (e.g., enrollment dated after their first completed exam)._
 18. **`duplicate_users_by_email.sql`** — Find probable duplicate users by normalized email (lowercased, trimmed) or another heuristic. _Variation: by a fuzzy match on name + signup date proximity (`pg_trgm` similarity ≥ 0.8 and signup within 24h)._
 
 **Pass/fail:** write any of these in under 2 minutes without looking up syntax. Each subsequent module ends with a drill that keeps the muscle memory warm.
@@ -207,7 +207,7 @@ of a node and detect cycles.
 
 **Drill (3 queries):**
 
-- For `user_quizzes`, find the 10 rows with the largest `(submitted_at - started_at)` interval. _Variation: same, but only for users who took ≥ 5 quizzes._
+- For `user_exams`, find the 10 rows with the longest exam duration. _Variation: same, but only for users who took ≥ 5 exams._
 - Compare two indexes' selectivity on `user_quizzes`: count distinct values for `(user_id)` vs `(user_id, quiz_id)`, and look up `null_frac` and `n_distinct` for each in `pg_stats`. _Variation: also compute `correlation` (physical row order) — useful for predicting whether a BRIN index could work._
 - Force a Seq Scan on a large table with `SET LOCAL enable_indexscan = off; EXPLAIN ANALYZE ...;` and compare to the index plan. _Variation: also disable `enable_bitmapscan` to see the full cost gap._
 
